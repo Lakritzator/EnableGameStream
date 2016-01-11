@@ -10,9 +10,9 @@ namespace EnableGameStream
 		{
 			var positions = new List<int>();
 			int i = Array.IndexOf(buffer, pattern[0], startIndex);
+			var segment = new byte[pattern.Length];
 			while (i >= 0 && i <= buffer.Length - pattern.Length)
 			{
-				var segment = new byte[pattern.Length];
 				Buffer.BlockCopy(buffer, i, segment, 0, pattern.Length);
 				if (segment.SequenceEqual(pattern))
 				{

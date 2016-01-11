@@ -56,12 +56,18 @@ namespace EnableGameStream
 
 		public void ScanForFiles()
 		{
+
+			var deviceToReplace = long.Parse("13D9", System.Globalization.NumberStyles.HexNumber);
+			var patternToLocate = BitConverter.GetBytes(deviceToReplace);
 			var path = Path.GetDirectoryName(ImagePath);
+			if (path == null)
+			{
+				return;
+			}
 			foreach (var file in Directory.GetFiles(path))
 			{
 				var bytes = File.ReadAllBytes(file);
-				var lookingFor = new byte[] {0x13, 0xD9};
-				var indexes = bytes.IndexOfSequence(lookingFor);
+				var indexes = bytes.IndexOfSequence(patternToLocate);
 
 				if (indexes.Count > 0)
 				{
