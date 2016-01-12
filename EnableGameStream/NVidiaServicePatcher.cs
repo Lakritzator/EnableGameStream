@@ -54,25 +54,46 @@ namespace EnableGameStream
 			RetrieveNVidiaGraphicsDeviceId();
 		}
 
-		public void ScanForFiles()
+		public void PatchFiles()
 		{
 
 			var deviceToReplace = long.Parse("13D9", System.Globalization.NumberStyles.HexNumber);
 			var patternToLocate = BitConverter.GetBytes(deviceToReplace);
 			var path = Path.GetDirectoryName(ImagePath);
+			bool serviceRunning = NVidiaStreamService.Status == ServiceControllerStatus.Running;
+
 			if (path == null)
 			{
 				return;
 			}
 			foreach (var file in Directory.GetFiles(path))
 			{
-				var bytes = File.ReadAllBytes(file);
-				var indexes = bytes.IndexOfSequence(patternToLocate);
+				var filePatcher = new FilePatcher(file);
+				var indexes = filePatcher.LocateBytes(patternToLocate);
 
+				var deviceToReplaceWith = long.Parse(DeviceId, System.Globalization.NumberStyles.HexNumber);
+				var patchPattern = BitConverter.GetBytes(deviceToReplaceWith);
 				if (indexes.Count > 0)
 				{
-					MessageBox.Show(file + " - " + indexes.Count);
+					var result = MessageBox.Show(file + " - " + indexes.Count, "Patch this?", MessageBoxButton.YesNo, MessageBoxImage.Question);
+					if (result == MessageBoxResult.Yes)
+					{
+						if (serviceRunning)
+						{
+							NVidiaStreamService.Stop();
+							serviceRunning = false;
+						}
+						foreach (var location in indexes)
+						{
+							filePatcher.ReplaceBytes(location, patchPattern);
+						}
+						filePatcher.WritePatched();
+					}
 				}
+			}
+			if (!serviceRunning)
+			{
+				NVidiaStreamService.Start();
 			}
 		}
 

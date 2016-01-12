@@ -14,7 +14,7 @@ namespace EnableGameStream
 			InitializeComponent();
 			patcher = new NVidiaServicePatcher();
 			//MessageBox.Show(patcher.DeviceId);
-			patcher.ScanForFiles();
+			patcher.PatchFiles();
 		}
 	}
 }

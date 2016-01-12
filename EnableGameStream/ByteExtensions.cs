@@ -4,8 +4,18 @@ using System.Linq;
 
 namespace EnableGameStream
 {
+	/// <summary>
+	/// Extension for byte[]
+	/// </summary>
 	public static class ByteExtensions
 	{
+		/// <summary>
+		/// Scan the byte arrray for the pattern
+		/// </summary>
+		/// <param name="buffer"></param>
+		/// <param name="pattern"></param>
+		/// <param name="startIndex"></param>
+		/// <returns></returns>
 		public static List<int> IndexOfSequence(this byte[] buffer, byte[] pattern, int startIndex = 0)
 		{
 			var positions = new List<int>();
