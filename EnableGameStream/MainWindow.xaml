@@ -3,10 +3,26 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:EnableGameStream"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
-    </Grid>
+        Title="Enable NVidia GameStream for GT Gfx-cards" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+    <StackPanel>
+		<DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
+			<Label Content="PNP Device ID" Width="100"/>
+			<TextBox Text="{Binding PnpDeviceId, Mode=OneWay}" IsReadOnly="True"/>
+		</DockPanel>
+		<DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
+			<Label Content="Device ID" Width="100"/>
+			<TextBox Text="{Binding DeviceId, Mode=OneWay}" IsReadOnly="True"/>
+		</DockPanel>
+		<DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
+			<Label Content="Service path" Width="100"/>
+			<TextBox Text="{Binding ImagePath, Mode=OneWay}" IsReadOnly="True"/>
+		</DockPanel>
+		<DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
+			<Label Content="Device to replace" Width="100"/>
+			<TextBox Text="{Binding DeviceToPatch}"/>
+		</DockPanel>
+		<Button Content="Stop service" IsEnabled="{Binding ServiceRunning}" Click="StopServiceButtonClick"/>
+		<Button Click="PatchButtonClick" Content="Patch" IsEnabled="{Binding ServiceNotRunning}"/>
+		<Button Content="Start service" IsEnabled="{Binding ServiceNotRunning}" Click="StartServiceButtonClick"/>
+	</StackPanel>
 </Window>
