@@ -7,7 +7,7 @@ namespace EnableGameStream
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		private NVidiaServicePatcher patcher;
+		private readonly NVidiaServicePatcher patcher;
 
 		public MainWindow()
 		{
@@ -15,6 +15,7 @@ namespace EnableGameStream
 			patcher = new NVidiaServicePatcher();
 			//MessageBox.Show(patcher.DeviceId);
 			patcher.PatchFiles();
+			Closed += (sender, args) => patcher.Dispose();
 		}
 	}
 }

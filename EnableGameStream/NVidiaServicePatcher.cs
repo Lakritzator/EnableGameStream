@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace EnableGameStream
 {
-	public class NVidiaServicePatcher
+	public class NVidiaServicePatcher : IDisposable
 	{
 		public ServiceController NVidiaStreamService
 		{
@@ -81,6 +81,7 @@ namespace EnableGameStream
 						if (serviceRunning)
 						{
 							NVidiaStreamService.Stop();
+							NVidiaStreamService.WaitForStatus(ServiceControllerStatus.Stopped);
 							serviceRunning = false;
 						}
 						foreach (var location in indexes)
@@ -140,6 +141,11 @@ namespace EnableGameStream
 					return Environment.ExpandEnvironmentVariables(imagePath);
 				}
 			}
+		}
+
+		public void Dispose()
+		{
+			((IDisposable)NVidiaStreamService).Dispose();
 		}
 	}
 }
