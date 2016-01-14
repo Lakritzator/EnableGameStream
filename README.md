@@ -2,7 +2,7 @@
 
 This small program should patch GeForce Experience to enable GameStream on GT Devices
 
-The idea is based upon the work of others, I used the manual from p1gl3t, as posted here http://forum.xda-developers.com/showpost.php?p=58240849&postcount=123
+The idea is based upon the work of others, I used the manual from p1gl3t, as posted on [xda-developers here](http://forum.xda-developers.com/showpost.php?p=58240849&postcount=123)
 I really liked the idea of using my laptop (using a NVidia GT 750M) in combination with Moonlight running on an Amazon Fire TV, and I got it working.
 
 One thing I didn't like about the solution, and that is one needs to install Python and also need to do a lot of manual steps.
@@ -17,8 +17,8 @@ What it currently does:
 * Start the service
 
 What this doesn't:
-* Enable frame buffer capture. I could by including the NvFBCEnable.exe, but I don't want issues with NVidia. Unless someone has information on how this works...
-* Patch the HTTP(S) communication between GeForce-Experience and the site, this could be done by installing my application temporarily as a Proxy (using Fiddler). [Here](http://forum.xda-developers.com/showpost.php?p=62867011&postcount=158) is an example on what the proxy needs to do.
+* Enable frame buffer capture. I could by including the NvFBCEnable.exe, but I don't want issues with NVidia. Unless someone has information on how this works... or if this is still needed? you can find the download in the link on [xda-developers here](http://forum.xda-developers.com/showpost.php?p=58240849&postcount=123)
+* Patch the HTTP(S) communication between GeForce-Experience and the site, this could be done by installing my application temporarily as a Proxy (using Fiddler). [Here on xda-developers](http://forum.xda-developers.com/showpost.php?p=62867011&postcount=158) is an example on what the proxy needs to do.
 
 Downloads can be found under the [releases](https://github.com/Lakritzator/EnableGameStream/releases) tab of this repository.
 
