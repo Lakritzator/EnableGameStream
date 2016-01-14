@@ -14,6 +14,13 @@ As soon as a functioning tool is available I will place it in the releases of th
 Last, an important notice:
 **There is a reason that NVidia didn't enable this functionality, as the power of the GT graphics cards is limited you will have issues streaming when a lot of stuff is going on!!!! I tried it with Alan Wake, video sequences were streaming fine to Moonlight but while playing I had about one frame per 3-4 seconds. Local display on the laptop had no lag at all. I had to reduce the details and resolution before it was somewhat playable in Moonlight.**
 
+Things to do:
+Add something to modifying the communication between GeForce-Experience and the site, this could be done by installing my application temporarily as a Proxy (using Fiddler). Here is an example on what the proxy needs to do: http://forum.xda-developers.com/showpost.php?p=62867011&postcount=158
+
+Downloads can be found under the [releases](https://github.com/Lakritzator/EnableGameStream/releases) tab of this repository.
+
+**DISCLAIMER**
+
 EnableGameStream is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
