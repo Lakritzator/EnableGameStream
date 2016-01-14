@@ -8,11 +8,17 @@ I really liked the idea of using my laptop (using a NVidia GT 750M) in combinati
 One thing I didn't like about the solution, and that is one needs to install Python and also need to do a lot of manual steps.
 This is why I wrote this little tool.
 
-The current state is that it is in development and doesn't work yet.
-As soon as a functioning tool is available I will place it in the releases of this repository.
+What it currently does:
+* Find your graphics card ID
+* Find the service
+* Find the files to patch
+* Stop the service
+* Patch the files
+* Start the service
 
-Things to do:
-Add something to modifying the communication between GeForce-Experience and the site, this could be done by installing my application temporarily as a Proxy (using Fiddler). Here is an example on what the proxy needs to do: http://forum.xda-developers.com/showpost.php?p=62867011&postcount=158
+What this doesn't:
+* Enable frame buffer capture. I could by including the NvFBCEnable.exe, but I don't want issues with NVidia. Unless someone has information on how this works...
+* Patch the HTTP(S) communication between GeForce-Experience and the site, this could be done by installing my application temporarily as a Proxy (using Fiddler). [Here](http://forum.xda-developers.com/showpost.php?p=62867011&postcount=158) is an example on what the proxy needs to do.
 
 Downloads can be found under the [releases](https://github.com/Lakritzator/EnableGameStream/releases) tab of this repository.
 
