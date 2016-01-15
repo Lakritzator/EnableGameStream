@@ -1,28 +1,39 @@
 ﻿<Window x:Class="EnableGameStream.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        Title="Enable NVidia GameStream for GT Gfx-cards" SizeToContent="WidthAndHeight" ResizeMode="NoResize">
+        Title="Enable NVidia GameStream for GT Gfx-cards"
+		SizeToContent="WidthAndHeight" ResizeMode="NoResize">
     <StackPanel>
 		<DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
-			<Label Content="PNP Device ID" Width="100"/>
-			<TextBox Text="{Binding PnpDeviceId, Mode=OneWay}" IsReadOnly="True"/>
+			<Label Content="Device Name" Width="100"/>
+			<TextBox Text="{Binding Device.Name, Mode=OneWay}" IsReadOnly="True"/>
 		</DockPanel>
 		<DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
 			<Label Content="Device ID" Width="100"/>
-			<TextBox Text="{Binding DeviceId, Mode=OneWay}" IsReadOnly="True"/>
+			<TextBox Text="{Binding Device.Id, Mode=OneWay}" IsReadOnly="True"/>
 		</DockPanel>
 		<DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
 			<Label Content="Service path" Width="100"/>
-			<TextBox Text="{Binding ImagePath, Mode=OneWay}" IsReadOnly="True"/>
+			<TextBox Text="{Binding Service.ImagePath, Mode=OneWay}" IsReadOnly="True"/>
 		</DockPanel>
 		<DockPanel LastChildFill="True" HorizontalAlignment="Stretch">
 			<Label Content="Device to replace" Width="100"/>
-			<TextBox Text="{Binding DeviceToPatch}"/>
+			<TextBox Text="{Binding DeviceToPatch, Mode=OneWay}"/>
 		</DockPanel>
-		<Button Content="Stop service" IsEnabled="{Binding ServiceRunning}" Click="StopServiceButtonClick"/>
-		<Button Click="PatchButtonClick" Content="Patch" IsEnabled="{Binding ServiceNotRunning}"/>
-		<Button Content="Start service" IsEnabled="{Binding ServiceNotRunning}" Click="StartServiceButtonClick"/>
+		<Label Content="Files found"/>
+		<ListView ItemsSource="{Binding PotentialFiles}">
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<DockPanel LastChildFill="True">
+						<TextBox Text="{Binding Patcher.Filepath, Mode=OneWay}"></TextBox>
+						<Label Content="-"/>
+						<TextBox Text="{Binding Patcher.Count, Mode=OneWay}"></TextBox>
+					</DockPanel>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+		<Button Content="Stop service" IsEnabled="{Binding Service.ServiceRunning}" Click="StopServiceButtonClick"/>
+		<Button Click="PatchButtonClick" Content="Patch all files in the list" IsEnabled="{Binding Service.ServiceNotRunning}"/>
+		<Button Content="Start service" IsEnabled="{Binding Service.ServiceNotRunning}" Click="StartServiceButtonClick"/>
 	</StackPanel>
 </Window>

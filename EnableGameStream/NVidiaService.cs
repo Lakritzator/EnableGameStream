@@ -4,20 +4,14 @@ using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 using Microsoft.Win32;
-using System.Management;
-using System.Text.RegularExpressions;
-using System.Windows;
 
 namespace EnableGameStream
 {
-	public class NVidiaServicePatcher : IDisposable, INotifyPropertyChanged
+	public class NVidiaService : IDisposable, INotifyPropertyChanged
 	{
-
 		public event PropertyChangedEventHandler PropertyChanged;
 		private bool _serviceRunning;
 		private bool _serviceNotRunning = true;
-		private string _pnpDeviceId;
-		private string _deviceId;
 		private string _imagePath;
 
 		public bool ServiceRunning
@@ -60,8 +54,6 @@ namespace EnableGameStream
 			private set;
 		}
 
-		public string DeviceToPatch { get; set; } = "13D9";
-
 		public string ImagePath
 		{
 			get { return _imagePath; }
@@ -75,37 +67,10 @@ namespace EnableGameStream
 			}
 		}
 
-		public string PnpDeviceId
-		{
-			get { return _pnpDeviceId; }
-			private set
-			{
-				if (_pnpDeviceId != value)
-				{
-					_pnpDeviceId = value;
-					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(PnpDeviceId)));
-
-				}
-			}
-		}
-
-		public string DeviceId
-		{
-			get { return _deviceId; }
-			private set
-			{
-				if (_deviceId != value)
-				{
-					_deviceId = value;
-					PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(DeviceId)));
-				}
-			}
-		}
-
 		/// <summary>
 		/// Create the service patcher
 		/// </summary>
-		public NVidiaServicePatcher()
+		public NVidiaService()
 		{
 			RetrieveNVidiaService();
 			if (NVidiaStreamService == null)
@@ -114,16 +79,7 @@ namespace EnableGameStream
 				return;
 			}
 			ServiceRunning = NVidiaStreamService.Status == ServiceControllerStatus.Running;
-		}
-
-		/// <summary>
-		/// Initialize some of the values
-		/// </summary>
-		public void Initialize()
-		{
-			ImagePath = GetImagePath(NVidiaStreamService.ServiceName);
-
-			RetrieveNVidiaGraphicsDeviceId();
+			ImagePath = Path.GetDirectoryName(GetImagePath(NVidiaStreamService.ServiceName));
 		}
 
 		/// <summary>
@@ -146,40 +102,6 @@ namespace EnableGameStream
 			ServiceRunning = true;
 		}
 
-		/// <summary>
-		/// Start the patching
-		/// </summary>
-		public void PatchFiles()
-		{
-			var deviceToReplace = long.Parse(DeviceToPatch, System.Globalization.NumberStyles.HexNumber);
-			var patternToLocate = BitConverter.GetBytes(deviceToReplace);
-			var path = Path.GetDirectoryName(ImagePath);
-
-			if (path == null)
-			{
-				return;
-			}
-			foreach (var file in Directory.GetFiles(path))
-			{
-				var filePatcher = new FilePatcher(file);
-				var indexes = filePatcher.LocateBytes(patternToLocate);
-
-				var deviceToReplaceWith = long.Parse(DeviceId, System.Globalization.NumberStyles.HexNumber);
-				var patchPattern = BitConverter.GetBytes(deviceToReplaceWith);
-				if (indexes.Count > 0)
-				{
-					var result = MessageBox.Show(file + " - " + indexes.Count, "Patch this?", MessageBoxButton.YesNo, MessageBoxImage.Question);
-					if (result == MessageBoxResult.Yes)
-					{
-						foreach (var location in indexes)
-						{
-							filePatcher.ReplaceBytes(location, patchPattern);
-						}
-						filePatcher.WritePatched();
-					}
-				}
-			}
-		}
 
 		/// <summary>
 		/// Get the NVidia service
@@ -189,22 +111,6 @@ namespace EnableGameStream
 			NVidiaStreamService = (from service in ServiceController.GetServices()
 								   where service.ServiceName == "NvStreamSvc"
 								   select service).FirstOrDefault();
-		}
-
-		/// <summary>
-		/// Get the NVidia graphics device ID
-		/// </summary>
-		private void RetrieveNVidiaGraphicsDeviceId()
-		{
-			var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_VideoController");
-
-			PnpDeviceId = (from managementObject in searcher.Get().Cast<ManagementObject>()
-						   where ((string)managementObject.Properties["Caption"].Value).ToLower().Contains("nvidia")
-						   select (string)managementObject.Properties["PNPDeviceID"].Value).FirstOrDefault();
-			if (PnpDeviceId != null)
-			{
-				DeviceId = Regex.Replace(PnpDeviceId, ".*DEV_([A-F0-9]+)&.*", "$1");
-			}
 		}
 
 		/// <summary>

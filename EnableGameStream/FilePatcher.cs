@@ -7,17 +7,20 @@ namespace EnableGameStream
 	public class FilePatcher
 	{
 		private readonly byte[] _fileBytes;
-		private readonly string _filepath;
 
-		public FilePatcher(string filepath)
+		public string Filepath { get; }
+
+		public IList<int> Indexes { get; }
+		public int Count
 		{
-			_filepath = filepath;
-			_fileBytes = File.ReadAllBytes(filepath);
+			get { return Indexes.Count; }
 		}
 
-		public IList<int> LocateBytes(byte[]pattern)
+		public FilePatcher(string filepath, byte[] pattern)
 		{
-			return _fileBytes.IndexOfSequence(pattern);
+			Filepath = filepath;
+			_fileBytes = File.ReadAllBytes(filepath);
+			Indexes = _fileBytes.IndexOfSequence(pattern);
 		}
 
 		public void ReplaceBytes(int location, byte[] newValues)
@@ -32,18 +35,18 @@ namespace EnableGameStream
 		/// <returns>Backup filename</returns>
 		public string WritePatched(string fileBackupPath = null)
 		{
-			if (!File.Exists(_filepath))
+			if (!File.Exists(Filepath))
 			{
 				throw new ApplicationException("Original file is gone!");
 			}
-			fileBackupPath = fileBackupPath ?? _filepath + ".bkp";
-			File.Move(_filepath, fileBackupPath);
-			if (!File.Exists(fileBackupPath) || File.Exists(_filepath))
+			fileBackupPath = fileBackupPath ?? Filepath + ".bkp";
+			File.Move(Filepath, fileBackupPath);
+			if (!File.Exists(fileBackupPath) || File.Exists(Filepath))
 			{
 				// original still there, or no backup
 				throw new ApplicationException("Problem moving the original fle!");
 			}
-			File.WriteAllBytes(_filepath, _fileBytes);
+			File.WriteAllBytes(Filepath, _fileBytes);
 			return fileBackupPath;
 		}
 	}
